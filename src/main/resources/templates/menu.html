@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+    <link rel="stylesheet" href="../css/sizes.css"/>
+    <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+    <header>
+        <h1>Menu</h1>
+        <a href="../logout" class="sidelink" th:text="${'Log ' + (@userController.logged ? 'Out' : 'In')}"/>
+    </header>
+
+
+    <div class="float-right">
+        <h3 class="avg-rating">Average Rating</h3>
+        <h3 class="avg-rating" th:text="${@menuController.getAvgRating}"></h3>
+
+        <div th:if="${@userController.loggedUser}">
+            <h3 class="avg-rating">Your Rating</h3>
+            <h3 class="avg-rating" th:text="${@menuController.getUserRating}"></h3>
+        </div>
+    </div>
+
+
+    <div class="main-menu-container">
+        <div class="centered-element">
+            <a href="menu/game" class="sidelink">Game</a>
+        </div>
+    </div>
+
+    <div class="login" th:if="not ${@userController.logged}">
+        <h3>Commenting and rating are available</h3>
+        <h3>only to logged in users</h3>
+    </div>
+
+
+    <!--    ${@menuController.ratingOn} and (DON'T REMOVE)-->
+    <div class="login" th:if="${@userController.logged}">
+        <h2>Give your rating</h2>
+        <form class="stars-rating-form" action="menu/rating" method="post">
+            <div class="rate">
+                <input type="submit" id="star5" name="rating" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input type="submit" id="star4" name="rating" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input type="submit" id="star3" name="rating" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input type="submit" id="star2" name="rating" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input type="submit" id="star1" name="rating" value="1" />
+                <label for="star1" title="text">1 star</label>
+            </div>
+        </form>
+    </div>
+
+
+
+<!--    ${@menuController.commentOn} and (DON'T REMOVE)-->
+    <div class="login" th:if="${@userController.logged}" >
+        <h2>Leave your comment</h2>
+        <form class="comment-from" action="/menu/comment" method="post">
+            <div class="textarea-wrapper">
+                <textarea name="comment" placeholder="Waiting for comment :)"></textarea>
+            </div>
+                <input type="submit" value="Submit"/>
+        </form>
+    </div>
+
+
+
+    <div class="scores-wrapper">
+        <h2>Comments</h2>
+
+        <table class="scores">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Player</th>
+                <th>Comment</th>
+                <th>Commented On</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="comments" type="java.util.List<sk.tuke.gamestudio.entity.Comment>"*/-->
+            <tr th:each="comment, it : ${comments}">
+                <td th:text="${it.index + 1}" style="text-align: center"></td>
+                <td th:text="${comment.player}"></td>
+                <td th:text="${comment.comment}"></td>
+                <td th:text="${#dates.format(comment.commentedOn, 'dd.MM.yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

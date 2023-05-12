@@ -1,0 +1,47 @@
+.img{
+    width: 70px;
+    height: 70px;
+    display: block;
+    border-radius: 99%;
+}
+
+td {
+    padding: 2px;
+}
+
+table.gameField{
+    margin: auto;
+}
+
+.scores-wrapper {
+    margin: auto;
+}
+
+.scores {
+    font-size: 19px;
+    width: 100%;
+    margin: auto;
+}
+
+.scores th, .scores td {
+    padding: 10px;
+    text-align: left;
+}
+
+.scores th {
+    background-color: #784192;
+    color: #fff;
+    font-weight: normal;
+}
+
+.scores tr:nth-child(even) {
+    background-color: #7b4aaa;
+}
+
+.scores tr:nth-child(odd){
+    background-color: #6d2aad;
+}
+
+.scores tr:hover {
+    background-color: #a542b1;
+}

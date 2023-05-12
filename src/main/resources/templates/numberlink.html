@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Numberlink</title>
+    <link rel="stylesheet" href="../css/sizes.css"/>
+    <link rel="stylesheet" href="../css/style.css"/>
+
+    <script>
+        window.addEventListener('hashchange', function() {
+            const raw = window.location.hash.replace("#r", "");
+            const rc = raw.split("c")
+            const rows = rc[0]
+            const columns = rc[1]
+
+            const url = "http://" + window.location.host + "/numberlink/field?row=" + rows + "&column=" + columns
+
+            const req = new XMLHttpRequest();
+            req.addEventListener("load", reqListener);
+            req.open("GET", url);
+            req.send();
+        });
+
+        function reqListener() {
+            var el = document.createElement('html');
+            el.innerHTML = this.responseText
+
+            var field = document.getElementById("gfield")
+            field.replaceWith(el)
+
+            const url = "http://" + window.location.host + "/numberlink/mode"
+
+            const req = new XMLHttpRequest();
+            req.addEventListener("load", reqListener2);
+            req.open("GET", url);
+            req.send();
+        }
+
+        function reqListener2() {
+            var mode = document.getElementById("gmode")
+            mode.innerText = "Change to " + this.responseText + " mode"
+        }
+    </script>
+</head>
+
+<body>
+<header>
+    <h1>Numberlink</h1>
+    <a href="../logout" class="sidelink" th:text="${'Log ' + (@userController.logged ? 'Out' : 'In')}"/>
+    <a href="../menu-redirect" class="sidelink">Main Menu</a>
+</header>
+
+    <br><a href="/numberlink/new" class="sidelink">New Game</a><br><br>
+    <a href="/numberlink/erase" id = "gmode" class="sidelink" th:text="${'Change to ' + (@numberlinkController.eraseMode ? 'Normal' : 'Erase') + ' mode'}"/><br><br>
+
+
+    <h2 class="you-won" th:if="${@numberlinkController.levelNumber} > ${@numberlinkController.maxLevel}">
+        Congratulations! All levels are passed
+    </h2>
+
+    <div class="table-wrapper">
+        <span th:utext="${@numberlinkController.getLevelV2}"></span>
+    </div>
+
+
+    <div class="scores-wrapper">
+        <h2>Top Scores</h2>
+
+        <table class="scores">
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Player</th>
+                <th>Points</th>
+                <th>Played At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="scores" type="java.util.List<sk.tuke.gamestudio.entity.Score>"*/-->
+            <tr th:each="score, it : ${scores}">
+                <td th:text="${it.index + 1}" style="text-align: center"></td>
+                <td th:text="${score.player}"></td>
+                <td th:text="${score.points}"></td>
+                <td th:text="${#dates.format(score.playedOn, 'dd.MM.yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="numberlinkFieldFromService"></div>
+
+</body>
+</html>
